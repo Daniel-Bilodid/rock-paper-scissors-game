@@ -1,40 +1,95 @@
 <template>
-  <div class="game" @click="handleClick">
+  <div class="game" v-if="!selectedType">
     <div class="game__triangle">
       <img src="../../assets/bg-triangle.svg" alt="triangle" />
     </div>
     <div class="game__body paper" data-type="paper">
-      <button class="game__body-item">
+      <button class="game__body-item" @click="handleClick">
         <img src="../../assets/icon-paper.svg" alt="paper" />
       </button>
     </div>
 
     <div class="game__body scissors" data-type="scissors">
-      <button class="game__body-item">
+      <button class="game__body-item" @click="handleClick">
         <img src="../../assets/icon-scissors.svg" alt="scissors" />
       </button>
     </div>
     <div class="game__body" data-type="rock">
-      <button class="game__body-item">
+      <button class="game__body-item" @click="handleClick">
         <img src="../../assets/icon-rock.svg" alt="rock" />
       </button>
+    </div>
+  </div>
+
+  <div class="game__picked" v-if="selectedType">
+    <div class="game__picked-wrapper">
+      <div class="game__picked-your">
+        <div class="game__picked-title">YOU PICKED</div>
+        <div :class="[`game__body ${selectedType}`]">
+          <button class="game__body-item">
+            <img :src="getSelectedImage" :alt="selectedType" />
+          </button>
+        </div>
+      </div>
+      <div class="game__picked-oponent">
+        <div class="game__picked-title">THE HOUSE PICKED</div>
+        <div class="game__body">
+          <button class="game__body-item">
+            <img :src="getOpponentPick" :alt="getOpponentPick" />
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import paper from "../../assets/icon-paper.svg";
+import scissors from "../../assets/icon-scissors.svg";
+import rock from "../../assets/icon-rock.svg";
+
 export default {
   name: "Game",
+  data() {
+    return {
+      selectedType: null,
+      opponentPick: [paper, scissors, rock],
+      oponentSelectedType: null,
+    };
+  },
+  computed: {
+    getSelectedImage() {
+      switch (this.selectedType) {
+        case "paper":
+          return paper;
+        case "scissors":
+          return scissors;
+        case "rock":
+          return rock;
+        default:
+          return "";
+      }
+    },
+    getOpponentPick() {
+      let randomItem =
+        this.opponentPick[Math.floor(Math.random() * this.opponentPick.length)];
+
+      return randomItem;
+    },
+  },
   methods: {
     handleClick(event) {
-      const type = event.currentTarget.getAttribute("data-type");
-      console.log(type);
+      const bodyElement = event.target.closest(".game__body");
+      const type = bodyElement ? bodyElement.getAttribute("data-type") : null;
+      this.selectedType = type;
+      this.getOpponentPick;
     },
   },
 };
 </script>
 
 <style lang="scss">
+@import "../../variables";
 .game {
   margin: 0 auto;
   display: flex;
@@ -43,7 +98,31 @@ export default {
   width: 500px;
   margin-top: 64px;
   gap: 80px;
+  &__active {
+    display: none;
+  }
 
+  &__picked {
+    display: block;
+    &-title {
+      margin-bottom: 63px;
+      color: rgb(255, 255, 255);
+      font-family: $barlow;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 32px;
+      letter-spacing: 3px;
+    }
+    &-wrapper {
+      display: flex;
+      justify-content: center;
+      gap: 72px;
+      margin-top: 72px;
+    }
+  }
+  &__not-picked {
+    display: none;
+  }
   &__triangle {
     position: absolute;
     z-index: -1;
