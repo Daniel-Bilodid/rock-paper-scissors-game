@@ -31,13 +31,22 @@
           </button>
         </div>
       </div>
-      <div class="game__picked-oponent">
+
+      <div class="game__result">
+        <div class="game__result-title">{{ gameResultTitle }}</div>
+        <button class="game__result-button">PLAY AGAIN</button>
+      </div>
+      <div v-if="oponentSelectedType" class="game__picked-oponent">
         <div class="game__picked-title">THE HOUSE PICKED</div>
-        <div class="game__body">
+        <div :class="[`game__body ${oponentSelectedType}`]">
           <button class="game__body-item">
             <img :src="getOpponentPick" :alt="getOpponentPick" />
           </button>
         </div>
+      </div>
+      <div class="game__wait" v-else>
+        <div class="game__picked-title">THE HOUSE PICKED</div>
+        <div class="game__Wait-body"></div>
       </div>
     </div>
   </div>
@@ -55,6 +64,13 @@ export default {
       selectedType: null,
       opponentPick: [paper, scissors, rock],
       oponentSelectedType: null,
+      gameResultTitle: "",
+      winCounter: 0,
+      winConditions: {
+        rock: "scissors",
+        paper: "rock",
+        scissors: "paper",
+      },
     };
   },
   computed: {
@@ -73,8 +89,23 @@ export default {
     getOpponentPick() {
       let randomItem =
         this.opponentPick[Math.floor(Math.random() * this.opponentPick.length)];
+      let oponentSelectedType = randomItem.split("icon-")[1].split(".svg")[0];
 
+      this.oponentSelectedType = oponentSelectedType;
       return randomItem;
+    },
+    getGameResult() {
+      console.log("meow");
+      if (this.selectedType === this.oponentSelectedType) {
+        this.gameResultTitle = "DRAW";
+      } else if (
+        this.winConditions[this.selectedType] === this.oponentSelectedType
+      ) {
+        this.gameResultTitle = "YOU WIN";
+      } else {
+        this.gameResultTitle = "YOU LOST";
+      }
+      return this.gameResultTitle;
     },
   },
   methods: {
@@ -82,7 +113,10 @@ export default {
       const bodyElement = event.target.closest(".game__body");
       const type = bodyElement ? bodyElement.getAttribute("data-type") : null;
       this.selectedType = type;
-      this.getOpponentPick;
+      setTimeout(() => {
+        this.getOpponentPick;
+        this.getGameResult;
+      }, 2000);
     },
   },
 };
@@ -101,7 +135,14 @@ export default {
   &__active {
     display: none;
   }
-
+  &__wait {
+    &-body {
+      width: 224.63px;
+      height: 224.63px;
+      background: rgba(0, 0, 0, 0.1);
+      border-radius: 100%;
+    }
+  }
   &__picked {
     display: block;
     &-title {
