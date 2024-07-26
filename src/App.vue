@@ -4,6 +4,17 @@ import Game from "./components/game/Game.vue";
 import Rules from "./components/rules/Rules.vue";
 export default {
   name: "App",
+
+  data() {
+    return {
+      winCounter: 0,
+    };
+  },
+  methods: {
+    updateWinCounter(newCount) {
+      this.winCounter = newCount;
+    },
+  },
   components: {
     Score,
     Game,
@@ -13,8 +24,8 @@ export default {
 </script>
 
 <template>
-  <Score></Score>
-  <Game></Game>
+  <Score :winCounter="winCounter"></Score>
+  <Game :winCounter="winCounter" @updateWinCounter="updateWinCounter"></Game>
   <Rules></Rules>
 </template>
 

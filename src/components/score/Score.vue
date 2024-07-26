@@ -6,7 +6,7 @@
       <div class="score__count">
         <div class="score__count-name">SCORE</div>
 
-        <div class="score__count-number">0</div>
+        <div class="score__count-number">{{ winCounter }}</div>
       </div>
     </div>
   </div>
@@ -15,6 +15,7 @@
 <script>
 export default {
   name: "Score",
+  props: ["winCounter"],
 };
 </script>
 
@@ -25,7 +26,7 @@ export default {
   height: 150px;
   border: 3px solid rgba(255, 255, 255, 0.29);
   border-radius: 15px;
-
+  margin: 0 auto;
   &__title {
     width: 159px;
     height: 96px;

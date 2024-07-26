@@ -1,64 +1,88 @@
 <template>
-  <div class="game" v-if="!selectedType">
-    <div class="game__triangle">
-      <img src="../../assets/bg-triangle.svg" alt="triangle" />
-    </div>
-    <div class="game__body paper" data-type="paper">
-      <button class="game__body-item" @click="handleClick">
-        <img src="../../assets/icon-paper.svg" alt="paper" />
-      </button>
-    </div>
+  <transition name="fade">
+    <div class="game" v-if="!selectedType">
+      <div class="game__triangle">
+        <img src="../../assets/bg-triangle.svg" alt="triangle" />
+      </div>
+      <div class="game__body paper" data-type="paper">
+        <button class="game__body-item" @click="handleClick('paper')">
+          <img src="../../assets/icon-paper.svg" alt="paper" />
+        </button>
+      </div>
 
-    <div class="game__body scissors" data-type="scissors">
-      <button class="game__body-item" @click="handleClick">
-        <img src="../../assets/icon-scissors.svg" alt="scissors" />
-      </button>
+      <div class="game__body scissors" data-type="scissors">
+        <button class="game__body-item" @click="handleClick('scissors')">
+          <img src="../../assets/icon-scissors.svg" alt="scissors" />
+        </button>
+      </div>
+      <div class="game__body" data-type="rock">
+        <button class="game__body-item" @click="handleClick('rock')">
+          <img src="../../assets/icon-rock.svg" alt="rock" />
+        </button>
+      </div>
     </div>
-    <div class="game__body" data-type="rock">
-      <button class="game__body-item" @click="handleClick">
-        <img src="../../assets/icon-rock.svg" alt="rock" />
-      </button>
-    </div>
-  </div>
+  </transition>
 
-  <div class="game__picked" v-if="selectedType">
-    <div class="game__picked-wrapper">
-      <div class="game__picked-your">
-        <div class="game__picked-title">YOU PICKED</div>
-        <div :class="[`game__body ${selectedType}`]">
-          <button class="game__body-item">
-            <img :src="getSelectedImage" :alt="selectedType" />
+  <transition name="fade">
+    <div class="game__picked" v-if="selectedType">
+      <div class="game__picked-wrapper">
+        <div class="game__picked-your">
+          <div class="game__picked-title">YOU PICKED</div>
+          <div :class="[`game__body game__body-large ${selectedType}`]">
+            <button class="game__body-item game__item-large">
+              <img
+                class="game__img-large"
+                :src="getSelectedImage"
+                :alt="selectedType"
+              />
+            </button>
+            <div v-if="playerWin">
+              <CircleAnimation />
+            </div>
+          </div>
+        </div>
+
+        <div v-if="oponentSelectedType" class="game__result">
+          <div class="game__result-title">{{ gameResultTitle }}</div>
+          <button @click="restartGame" class="game__result-button">
+            PLAY AGAIN
           </button>
         </div>
-      </div>
-
-      <div class="game__result">
-        <div class="game__result-title">{{ gameResultTitle }}</div>
-        <button class="game__result-button">PLAY AGAIN</button>
-      </div>
-      <div v-if="oponentSelectedType" class="game__picked-oponent">
-        <div class="game__picked-title">THE HOUSE PICKED</div>
-        <div :class="[`game__body ${oponentSelectedType}`]">
-          <button class="game__body-item">
-            <img :src="getOpponentPick" :alt="getOpponentPick" />
-          </button>
+        <div v-if="oponentSelectedType" class="game__picked-oponent">
+          <div class="game__picked-title">THE HOUSE PICKED</div>
+          <div :class="[`game__body game__body-large ${oponentSelectedType}`]">
+            <button class="game__body-item game__item-large">
+              <img
+                class="game__img-large"
+                :src="randomItem"
+                :alt="oponentSelectedType"
+              />
+            </button>
+            <div v-if="computerWin">
+              <CircleAnimation />
+            </div>
+          </div>
+        </div>
+        <div class="game__wait" v-else>
+          <div class="game__picked-title">THE HOUSE PICKED</div>
+          <div class="game__wait-body"></div>
         </div>
       </div>
-      <div class="game__wait" v-else>
-        <div class="game__picked-title">THE HOUSE PICKED</div>
-        <div class="game__Wait-body"></div>
-      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
 import paper from "../../assets/icon-paper.svg";
 import scissors from "../../assets/icon-scissors.svg";
 import rock from "../../assets/icon-rock.svg";
+import CircleAnimation from "../CircleAnimation.vue";
 
 export default {
   name: "Game",
+  components: {
+    CircleAnimation,
+  },
   data() {
     return {
       selectedType: null,
@@ -66,6 +90,9 @@ export default {
       oponentSelectedType: null,
       gameResultTitle: "",
       winCounter: 0,
+      randomItem: null,
+      playerWin: false,
+      computerWin: false,
       winConditions: {
         rock: "scissors",
         paper: "rock",
@@ -86,37 +113,50 @@ export default {
           return "";
       }
     },
-    getOpponentPick() {
-      let randomItem =
-        this.opponentPick[Math.floor(Math.random() * this.opponentPick.length)];
-      let oponentSelectedType = randomItem.split("icon-")[1].split(".svg")[0];
+  },
+  methods: {
+    handleClick(type) {
+      this.selectedType = type;
 
-      this.oponentSelectedType = oponentSelectedType;
+      setTimeout(() => {
+        this.randomItem = this.getOpponentPick();
+        this.getGameResult();
+        this.animateResult();
+      }, 2000);
+    },
+    getOpponentPick() {
+      const randomItem =
+        this.opponentPick[Math.floor(Math.random() * this.opponentPick.length)];
+      this.randomItem = randomItem;
+      this.oponentSelectedType = randomItem.split("icon-")[1].split(".svg")[0];
       return randomItem;
     },
     getGameResult() {
-      console.log("meow");
       if (this.selectedType === this.oponentSelectedType) {
         this.gameResultTitle = "DRAW";
       } else if (
         this.winConditions[this.selectedType] === this.oponentSelectedType
       ) {
         this.gameResultTitle = "YOU WIN";
+        this.playerWin = true;
+        this.incrementWinCounter();
       } else {
+        this.computerWin = true;
         this.gameResultTitle = "YOU LOST";
+        this.computerWin = true;
       }
-      return this.gameResultTitle;
     },
-  },
-  methods: {
-    handleClick(event) {
-      const bodyElement = event.target.closest(".game__body");
-      const type = bodyElement ? bodyElement.getAttribute("data-type") : null;
-      this.selectedType = type;
-      setTimeout(() => {
-        this.getOpponentPick;
-        this.getGameResult;
-      }, 2000);
+    incrementWinCounter() {
+      this.winCounter++;
+      this.$emit("updateWinCounter", this.winCounter);
+    },
+    restartGame() {
+      this.selectedType = null;
+      this.oponentSelectedType = null;
+      this.gameResultTitle = "";
+      this.randomItem = null;
+      this.playerWin = false;
+      this.computerWin = false;
     },
   },
 };
@@ -124,6 +164,14 @@ export default {
 
 <style lang="scss">
 @import "../../variables";
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s ease;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 .game {
   margin: 0 auto;
   display: flex;
@@ -135,12 +183,72 @@ export default {
   &__active {
     display: none;
   }
+  &__img {
+    &-large {
+      width: 88px;
+      height: 118px;
+      object-fit: contain;
+    }
+  }
   &__wait {
     &-body {
       width: 224.63px;
       height: 224.63px;
       background: rgba(0, 0, 0, 0.1);
       border-radius: 100%;
+    }
+  }
+  &__body {
+    &-large {
+      width: 292.61px !important;
+      height: 300px !important;
+    }
+  }
+
+  &__item {
+    &-large {
+      width: 244.88px !important;
+      height: 244.88px !important;
+    }
+  }
+  &__result {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    &-title {
+      color: rgb(255, 255, 255);
+      font-family: $barlow;
+      font-size: 56px;
+      font-weight: 700;
+      line-height: 67px;
+      letter-spacing: 0px;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    &-button {
+      width: 220px;
+      height: 48px;
+      border-radius: 8px;
+
+      box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.2);
+      background: linear-gradient(
+        0deg,
+        rgb(243, 243, 243),
+        rgb(255, 255, 255) 100%
+      );
+      border: none;
+      color: rgb(59, 66, 98);
+      font-family: $barlow;
+      font-size: 16px;
+      font-weight: 600;
+      line-height: 19px;
+      letter-spacing: 2.5px;
+      z-index: 20;
+    }
+    &-button:hover {
+      color: rgb(219, 46, 77);
     }
   }
   &__picked {
