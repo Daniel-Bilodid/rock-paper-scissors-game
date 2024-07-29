@@ -1,25 +1,44 @@
 <template>
   <transition name="fade">
-    <div class="game" v-if="!selectedType">
-      <div class="game__triangle">
-        <img src="../../assets/bg-triangle.svg" alt="triangle" />
-      </div>
-      <div class="game__body paper" data-type="paper">
-        <button class="game__body-item" @click="handleClick('paper')">
-          <img src="../../assets/icon-paper.svg" alt="paper" />
-        </button>
-      </div>
+    <div class="game">
+      <transition-group name="slide">
+        <div v-if="!selectedType" class="game__triangle">
+          <img src="../../assets/bg-triangle.svg" alt="triangle" />
+        </div>
+        <div
+          v-if="!selectedType || selectedType === 'paper'"
+          class="game__body paper"
+          data-type="paper"
+        >
+          <button class="game__body-item" @click="handleClick('paper')">
+            <img src="../../assets/icon-paper.svg" alt="paper" />
+          </button>
+        </div>
 
-      <div class="game__body scissors" data-type="scissors">
-        <button class="game__body-item" @click="handleClick('scissors')">
-          <img src="../../assets/icon-scissors.svg" alt="scissors" />
-        </button>
-      </div>
-      <div class="game__body" data-type="rock">
-        <button class="game__body-item" @click="handleClick('rock')">
-          <img src="../../assets/icon-rock.svg" alt="rock" />
-        </button>
-      </div>
+        <div
+          v-if="
+            !selectedType ||
+            selectedType === 'scissors' ||
+            !oponentSelectedType ||
+            oponentSelectedType === 'scissors'
+          "
+          class="game__body scissors"
+          data-type="scissors"
+        >
+          <button class="game__body-item" @click="handleClick('scissors')">
+            <img src="../../assets/icon-scissors.svg" alt="scissors" />
+          </button>
+        </div>
+        <div
+          v-if="!selectedType || selectedType === 'rock'"
+          class="game__body"
+          data-type="rock"
+        >
+          <button class="game__body-item" @click="handleClick('rock')">
+            <img src="../../assets/icon-rock.svg" alt="rock" />
+          </button>
+        </div>
+      </transition-group>
     </div>
   </transition>
 
@@ -121,7 +140,6 @@ export default {
       setTimeout(() => {
         this.randomItem = this.getOpponentPick();
         this.getGameResult();
-        this.animateResult();
       }, 2000);
     },
     getOpponentPick() {
@@ -164,12 +182,22 @@ export default {
 
 <style lang="scss">
 @import "../../variables";
+/* Стили для fade transition */
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.5s;
 }
-.fade-enter,
-.fade-leave-to {
+.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+  opacity: 0;
+}
+
+/* Стили для slide transition */
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.5s;
+}
+.slide-enter, .slide-leave-to /* .slide-leave-active до версии 2.1.8 */ {
+  transform: translateY(30px);
   opacity: 0;
 }
 .game {
@@ -246,6 +274,7 @@ export default {
       line-height: 19px;
       letter-spacing: 2.5px;
       z-index: 20;
+      cursor: pointer;
     }
     &-button:hover {
       color: rgb(219, 46, 77);
@@ -277,8 +306,26 @@ export default {
     z-index: -1;
     top: 20em;
   }
-  &__body:hover {
-    transform: scale(1.15);
+  &__body:hover::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgb(255, 255, 255);
+    opacity: 0.05;
+
+    opacity: 0;
+    transition: width 0.3s ease, height 0.3s ease, opacity 0.3s ease;
+    z-index: -1;
+  }
+  &__body:hover::after {
+    width: 250px;
+    height: 250px;
+    opacity: 0.5;
   }
   &__body {
     width: 198px;

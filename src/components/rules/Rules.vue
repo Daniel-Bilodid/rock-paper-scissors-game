@@ -1,23 +1,29 @@
 <template>
-  <div v-if="rulesActive" class="rules__modal">
-    <div class="rules__modal-header">
-      <div class="rules__modal-title">RULES</div>
-      <button @click="toggleRules" class="rules__button-close">
-        <img
-          class="rules__close"
-          src="../../assets/icon-close.svg"
-          alt="iconClose"
-        />
-      </button>
-    </div>
+  <div>
+    <transition name="fade">
+      <div v-if="rulesActive" class="overlay"></div>
+    </transition>
+    <transition name="slide">
+      <div v-if="rulesActive" class="rules__modal">
+        <div class="rules__modal-header">
+          <div class="rules__modal-title">RULES</div>
+          <button @click="toggleRules" class="rules__button-close">
+            <img
+              class="rules__close"
+              src="../../assets/icon-close.svg"
+              alt="iconClose"
+            />
+          </button>
+        </div>
 
-    <div class="rules__modal-img">
-      <img src="../../assets/image-rules.svg" alt="rules" />
-    </div>
+        <div class="rules__modal-img">
+          <img src="../../assets/image-rules.svg" alt="rules" />
+        </div>
+      </div>
+    </transition>
+    <button class="rules" @click="toggleRules">RULES</button>
   </div>
-  <button class="rules" @click="toggleRules">RULES</button>
 </template>
-
 <script>
 export default {
   name: "Rules",
@@ -36,6 +42,19 @@ export default {
 
 <style lang="scss">
 @import "../../variables";
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 998;
+}
+.rules:hover {
+  background-color: white;
+  color: rgb(59, 66, 98);
+}
 .rules {
   position: absolute;
   right: 32px;
@@ -52,6 +71,7 @@ export default {
   line-height: 19px;
   letter-spacing: 2.5px;
   text-align: center;
+
   &__close {
     width: 22.09px;
     height: 22.09px;
@@ -77,6 +97,7 @@ export default {
 
     box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.2);
     background: rgb(255, 255, 255);
+    z-index: 999;
     &-img {
       margin-top: 48px;
     }
@@ -97,5 +118,25 @@ export default {
       justify-content: space-between;
     }
   }
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.5s ease;
+}
+
+.slide-enter,
+.slide-leave-to {
+  transform: translate(-50%, -50%);
+  opacity: 0;
 }
 </style>
