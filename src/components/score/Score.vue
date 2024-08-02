@@ -79,4 +79,9 @@ export default {
     }
   }
 }
+@media screen and (max-width: 800px) {
+  .score {
+    width: 100%;
+  }
+}
 </style>

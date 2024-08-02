@@ -139,4 +139,10 @@ export default {
   transform: translate(-50%, -50%);
   opacity: 0;
 }
+@media screen and (max-width: 800px) {
+  .rules {
+    position: unset;
+    margin-top: 139px;
+  }
+}
 </style>
