@@ -176,21 +176,22 @@ export default {
 
 <style lang="scss">
 @import "../../variables";
-/* Стили для fade transition */
+
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.5s;
 }
-.fade-enter, .fade-leave-to /* .fade-leave-active до версии 2.1.8 */ {
+.fade-enter,
+.fade-leave-to {
   opacity: 0;
 }
 
-/* Стили для slide transition */
 .slide-enter-active,
 .slide-leave-active {
   transition: all 0.5s;
 }
-.slide-enter, .slide-leave-to /* .slide-leave-active до версии 2.1.8 */ {
+.slide-enter,
+.slide-leave-to {
   transform: translateY(30px);
   opacity: 0;
 }
@@ -356,9 +357,42 @@ export default {
 }
 @media screen and (max-width: 800px) {
   .game {
+    &__img {
+      &-large {
+        width: unset;
+        height: unset;
+      }
+    }
+    &__result {
+      top: 35rem;
+      position: absolute;
+
+      &-title {
+        font-size: 56px;
+        font-weight: 700;
+        line-height: 67px;
+        letter-spacing: 0px;
+      }
+    }
+    &__picked {
+      &-wrapper {
+        margin-bottom: 100px;
+      }
+    }
+    &__item {
+      &-large {
+        width: 99.31px !important;
+        height: 99.33px !important;
+      }
+    }
     &__body {
       width: 129.37px;
       height: 132.66px;
+
+      &-large {
+        width: 129.37px !important;
+        height: 132.66px !important;
+      }
       &-item {
         width: 99.31px;
         height: 99.33px;
