@@ -357,6 +357,12 @@ export default {
 }
 @media screen and (max-width: 800px) {
   .game {
+    &__wait {
+      &-body {
+        width: 129px;
+        height: 132px;
+      }
+    }
     &__img {
       &-large {
         width: unset;
@@ -388,7 +394,7 @@ export default {
     &__body {
       width: 129.37px;
       height: 132.66px;
-
+      margin: 0 auto;
       &-large {
         width: 129.37px !important;
         height: 132.66px !important;
@@ -401,6 +407,47 @@ export default {
 
     &__triangle {
       top: 19em;
+    }
+  }
+}
+
+@media screen and (max-width: 700px) {
+  .game {
+    &__triangle {
+      top: 15rem;
+    }
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .game {
+    width: unset;
+    gap: 12px;
+    &__picked {
+      &-oponent {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+      &-your {
+        display: flex;
+        flex-direction: column-reverse;
+      }
+      &-title {
+        width: 100%;
+        margin-bottom: 0;
+        margin-top: 17px;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 32px;
+        letter-spacing: 1.88px;
+      }
+    }
+    &__triangle {
+      top: 15em;
+      img {
+        width: 166px;
+        height: 188px;
+      }
     }
   }
 }

@@ -79,9 +79,40 @@ export default {
     }
   }
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 700px) {
   .score {
     width: 100%;
+    height: 96px;
+    &__title {
+      width: 84px;
+      height: 48px;
+      font-size: 21px;
+      font-weight: 700;
+      line-height: 16px;
+      margin: 0;
+      margin-left: 24px;
+      margin-top: 24px;
+    }
+
+    &__count {
+      width: 80px;
+      height: 72px;
+      margin: 0;
+      margin-top: 12px;
+      margin-right: 12px;
+      &-name {
+        font-size: 10px;
+        font-weight: 600;
+        line-height: 12px;
+        letter-spacing: 1.56px;
+      }
+      &-number {
+        font-size: 40px;
+        font-weight: 700;
+        line-height: 40px;
+        letter-spacing: 0px;
+      }
+    }
   }
 }
 </style>
