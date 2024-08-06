@@ -137,10 +137,30 @@ export default {
       }, 2000);
     },
     getOpponentPick() {
+      if (!this.opponentPick || this.opponentPick.length === 0) {
+        console.error("opponentPick is undefined or empty");
+        return null;
+      }
+
       const randomItem =
         this.opponentPick[Math.floor(Math.random() * this.opponentPick.length)];
+
+      if (!randomItem) {
+        console.error("Failed to get a random item from opponentPick");
+        return null;
+      }
+
       this.randomItem = randomItem;
-      this.oponentSelectedType = randomItem.split("icon-")[1].split(".svg")[0];
+
+      if (randomItem.includes("icon-") && randomItem.includes(".svg")) {
+        this.oponentSelectedType = randomItem
+          .split("icon-")[1]
+          .split(".svg")[0];
+      } else {
+        console.error("randomItem format is incorrect");
+        return null;
+      }
+
       return randomItem;
     },
     getGameResult() {
