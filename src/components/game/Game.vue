@@ -355,7 +355,7 @@ export default {
     }
   }
 }
-@media screen and (max-width: 800px) {
+@media screen and (max-width: 1100px) {
   .game {
     &__wait {
       &-body {
@@ -370,7 +370,7 @@ export default {
       }
     }
     &__result {
-      top: 35rem;
+      top: 32rem;
       position: absolute;
 
       &-title {
@@ -419,10 +419,17 @@ export default {
   }
 }
 
-@media screen and (max-width: 450px) {
+@media screen and (max-width: 520px) {
   .game {
     width: unset;
     gap: 12px;
+    &__wait {
+      display: flex;
+      flex-direction: column-reverse;
+    }
+    &__result {
+      top: 27rem;
+    }
     &__picked {
       &-oponent {
         display: flex;
@@ -447,6 +454,25 @@ export default {
       img {
         width: 166px;
         height: 188px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .game {
+    &__picked {
+      &-wrapper {
+        gap: 20px;
+      }
+    }
+  }
+}
+@media screen and (max-width: 330px) {
+  .game {
+    &__picked {
+      &-wrapper {
+        gap: 12px;
       }
     }
   }

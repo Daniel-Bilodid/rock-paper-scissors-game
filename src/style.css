@@ -53,7 +53,7 @@ button:hover {
     overflow: visible;
   }
 }
-@media screen and (max-width: 330px) {
+@media screen and (max-width: 340px) {
   #app {
     padding: 1rem;
   }
