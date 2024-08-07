@@ -1,26 +1,24 @@
 <template>
   <div>
-    <transition name="fade">
-      <div v-if="rulesActive" class="overlay"></div>
-    </transition>
-    <transition name="slide">
-      <div v-if="rulesActive" class="rules__modal">
-        <div class="rules__modal-header">
-          <div class="rules__modal-title">RULES</div>
-          <button @click="toggleRules" class="rules__button-close">
-            <img
-              class="rules__close"
-              src="../../assets/icon-close.svg"
-              alt="iconClose"
-            />
-          </button>
-        </div>
+    <div v-if="rulesActive" class="overlay"></div>
 
-        <div class="rules__modal-img">
-          <img src="../../assets/image-rules.svg" alt="rules" />
-        </div>
+    <div v-if="rulesActive" class="rules__modal">
+      <div class="rules__modal-header">
+        <div class="rules__modal-title">RULES</div>
+        <button @click="toggleRules" class="rules__button-close">
+          <img
+            class="rules__close"
+            src="../../assets/icon-close.svg"
+            alt="iconClose"
+          />
+        </button>
       </div>
-    </transition>
+
+      <div class="rules__modal-img">
+        <img src="../../assets/image-rules.svg" alt="rules" />
+      </div>
+    </div>
+
     <button class="rules" @click="toggleRules">RULES</button>
   </div>
 </template>
@@ -84,6 +82,7 @@ export default {
       background-color: none;
       background: none;
       padding: 0;
+      cursor: pointer;
     }
   }
   &__modal {
@@ -119,26 +118,7 @@ export default {
     }
   }
 }
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
 
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 0.5s ease;
-}
-
-.slide-enter,
-.slide-leave-to {
-  transform: translate(-50%, -50%);
-  opacity: 0;
-}
 @media screen and (max-width: 800px) {
   .rules {
     position: unset;

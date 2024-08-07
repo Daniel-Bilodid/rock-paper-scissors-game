@@ -441,7 +441,7 @@ export default {
 
 @media screen and (max-width: 520px) {
   .game {
-    width: unset;
+    width: 300px;
     gap: 12px;
     &__wait {
       display: flex;
@@ -481,6 +481,7 @@ export default {
 
 @media screen and (max-width: 400px) {
   .game {
+    widows: unset;
     &__picked {
       &-wrapper {
         gap: 20px;
@@ -488,6 +489,7 @@ export default {
     }
   }
 }
+
 @media screen and (max-width: 330px) {
   .game {
     &__picked {
