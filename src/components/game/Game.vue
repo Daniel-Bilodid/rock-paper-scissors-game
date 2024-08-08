@@ -1,88 +1,94 @@
 <template>
-  <div class="game" v-if="!selectedType">
-    <div class="game__triangle">
-      <img src="../../assets/bg-triangle.svg" alt="triangle" />
-    </div>
-    <div
-      v-if="!selectedType || selectedType === 'paper'"
-      class="game__body paper"
-      data-type="paper"
-    >
-      <button class="game__body-item" @click="handleClick('paper')">
-        <img src="../../assets/icon-paper.svg" alt="paper" />
-      </button>
-    </div>
-
-    <div
-      v-if="
-        !selectedType ||
-        selectedType === 'scissors' ||
-        !oponentSelectedType ||
-        oponentSelectedType === 'scissors'
-      "
-      class="game__body scissors"
-      data-type="scissors"
-    >
-      <button class="game__body-item" @click="handleClick('scissors')">
-        <img src="../../assets/icon-scissors.svg" alt="scissors" />
-      </button>
-    </div>
-    <div
-      v-if="!selectedType || selectedType === 'rock'"
-      class="game__body"
-      data-type="rock"
-    >
-      <button class="game__body-item" @click="handleClick('rock')">
-        <img src="../../assets/icon-rock.svg" alt="rock" />
-      </button>
-    </div>
-  </div>
-
-  <div class="game__picked" v-if="selectedType">
-    <div class="game__picked-wrapper">
-      <div class="game__picked-your">
-        <div class="game__picked-title">YOU PICKED</div>
-        <div :class="[`game__body game__body-large ${selectedType}`]">
-          <button class="game__body-item game__item-large">
-            <img
-              class="game__img-large"
-              :src="getSelectedImage"
-              :alt="selectedType"
-            />
-          </button>
-          <div v-if="playerWin">
-            <CircleAnimation />
-          </div>
-        </div>
+  <transition name="fade">
+    <div class="game" v-if="!selectedType">
+      <div class="game__triangle">
+        <img src="../../assets/bg-triangle.svg" alt="triangle" />
       </div>
-
-      <div v-if="oponentSelectedType" class="game__result">
-        <div class="game__result-title">{{ gameResultTitle }}</div>
-        <button @click="restartGame" class="game__result-button">
-          PLAY AGAIN
+      <div
+        v-if="!selectedType || selectedType === 'paper'"
+        class="game__body paper"
+        data-type="paper"
+      >
+        <button class="game__body-item" @click="handleClick('paper')">
+          <img src="../../assets/icon-paper.svg" alt="paper" />
         </button>
       </div>
-      <div v-if="oponentSelectedType" class="game__picked-oponent">
-        <div class="game__picked-title">THE HOUSE PICKED</div>
-        <div :class="[`game__body game__body-large ${oponentSelectedType}`]">
-          <button class="game__body-item game__item-large">
-            <img
-              class="game__img-large"
-              :src="randomItem"
-              :alt="oponentSelectedType"
-            />
-          </button>
-          <div v-if="computerWin">
-            <CircleAnimation />
-          </div>
-        </div>
+
+      <div
+        v-if="
+          !selectedType ||
+          selectedType === 'scissors' ||
+          !oponentSelectedType ||
+          oponentSelectedType === 'scissors'
+        "
+        class="game__body scissors"
+        data-type="scissors"
+      >
+        <button class="game__body-item" @click="handleClick('scissors')">
+          <img src="../../assets/icon-scissors.svg" alt="scissors" />
+        </button>
       </div>
-      <div class="game__wait" v-else>
-        <div class="game__picked-title">THE HOUSE PICKED</div>
-        <div class="game__wait-body"></div>
+      <div
+        v-if="!selectedType || selectedType === 'rock'"
+        class="game__body"
+        data-type="rock"
+      >
+        <button class="game__body-item" @click="handleClick('rock')">
+          <img src="../../assets/icon-rock.svg" alt="rock" />
+        </button>
       </div>
     </div>
-  </div>
+  </transition>
+
+  <transition name="fade">
+    <div class="game__picked" v-if="selectedType">
+      <div class="game__picked-wrapper">
+        <div class="game__picked-your">
+          <div class="game__picked-title">YOU PICKED</div>
+          <div :class="[`game__body game__body-large ${selectedType}`]">
+            <button class="game__body-item game__item-large">
+              <img
+                class="game__img-large"
+                :src="getSelectedImage"
+                :alt="selectedType"
+              />
+            </button>
+            <div v-if="playerWin">
+              <CircleAnimation />
+            </div>
+          </div>
+        </div>
+
+        <div v-if="oponentSelectedType" class="game__result">
+          <div class="game__result-title">{{ gameResultTitle }}</div>
+          <button @click="restartGame" class="game__result-button">
+            PLAY AGAIN
+          </button>
+        </div>
+
+        <div v-if="oponentSelectedType" class="game__picked-oponent">
+          <div class="game__picked-title">THE HOUSE PICKED</div>
+          <div :class="[`game__body game__body-large ${oponentSelectedType}`]">
+            <button class="game__body-item game__item-large">
+              <img
+                class="game__img-large"
+                :src="randomItem"
+                :alt="oponentSelectedType"
+              />
+            </button>
+            <div v-if="computerWin">
+              <CircleAnimation />
+            </div>
+          </div>
+        </div>
+
+        <div class="game__wait" v-else>
+          <div class="game__picked-title">THE HOUSE PICKED</div>
+          <div class="game__wait-body"></div>
+        </div>
+      </div>
+    </div>
+  </transition>
 </template>
 
 <script>
@@ -206,15 +212,6 @@ export default {
   opacity: 0;
 }
 
-.slide-enter-active,
-.slide-leave-active {
-  transition: all 0.5s;
-}
-.slide-enter,
-.slide-leave-to {
-  transform: translateY(30px);
-  opacity: 0;
-}
 .game {
   margin: 0 auto;
   display: flex;

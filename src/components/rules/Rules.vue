@@ -1,27 +1,32 @@
 <template>
   <div>
-    <div v-if="rulesActive" class="overlay"></div>
+    <transition name="fade">
+      <div v-if="rulesActive" class="overlay"></div>
+    </transition>
 
-    <div v-if="rulesActive" class="rules__modal">
-      <div class="rules__modal-header">
-        <div class="rules__modal-title">RULES</div>
-        <button @click="toggleRules" class="rules__button-close">
-          <img
-            class="rules__close"
-            src="../../assets/icon-close.svg"
-            alt="iconClose"
-          />
-        </button>
-      </div>
+    <transition name="fade">
+      <div v-if="rulesActive" class="rules__modal">
+        <div class="rules__modal-header">
+          <div class="rules__modal-title">RULES</div>
+          <button @click="toggleRules" class="rules__button-close">
+            <img
+              class="rules__close"
+              src="../../assets/icon-close.svg"
+              alt="iconClose"
+            />
+          </button>
+        </div>
 
-      <div class="rules__modal-img">
-        <img src="../../assets/image-rules.svg" alt="rules" />
+        <div class="rules__modal-img">
+          <img src="../../assets/image-rules.svg" alt="rules" />
+        </div>
       </div>
-    </div>
+    </transition>
 
     <button class="rules" @click="toggleRules">RULES</button>
   </div>
 </template>
+
 <script>
 export default {
   name: "Rules",
@@ -40,6 +45,7 @@ export default {
 
 <style lang="scss">
 @import "../../variables";
+
 .overlay {
   position: fixed;
   top: 0;
@@ -49,10 +55,12 @@ export default {
   background: rgba(0, 0, 0, 0.5);
   z-index: 998;
 }
+
 .rules:hover {
   background-color: white;
   color: rgb(59, 66, 98);
 }
+
 .rules {
   position: absolute;
   right: 32px;
@@ -76,6 +84,7 @@ export default {
     margin-top: 38px;
     margin-right: 31.91px;
   }
+
   &__button {
     &-close {
       border: none;
@@ -85,21 +94,23 @@ export default {
       cursor: pointer;
     }
   }
+
   &__modal {
     position: absolute;
     right: 50%;
-    top: 5%;
+    top: -8%;
     transform: translate(50%, 50%);
     width: 400px;
     height: 415px;
     border-radius: 8px;
-
     box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.2);
     background: rgb(255, 255, 255);
     z-index: 999;
+
     &-img {
       margin-top: 48px;
     }
+
     &-title {
       margin-top: 32px;
       margin-left: 32px;
@@ -123,6 +134,24 @@ export default {
   .rules {
     position: unset;
     margin-top: 139px;
+  }
+}
+
+/* Animation Styles */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+  opacity: 0;
+}
+
+@media screen and (max-width: 450px) {
+  .rulse {
+    &__modal {
+      width: 100% !important;
+    }
   }
 }
 </style>
