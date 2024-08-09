@@ -142,29 +142,26 @@ export default {
         this.getGameResult();
       }, 2000);
     },
-    getOpponentPick() {
-      const opponentPick = [paper, scissors, rock];
+    async getOpponentPick() {
+      const assets = {
+        paper: () => import("../../assets/icon-paper.svg"),
+        scissors: () => import("../../assets/icon-scissors.svg"),
+        rock: () => import("../../assets/icon-rock.svg"),
+      };
 
-      const randomItem =
-        opponentPick[Math.floor(Math.random() * opponentPick.length)];
+      const types = Object.keys(assets);
+      const randomType = types[Math.floor(Math.random() * types.length)];
+      const randomItem = await assets[randomType]();
 
       if (!randomItem) {
         console.error("Failed to get a random item from opponentPick");
         return null;
       }
 
-      this.randomItem = randomItem;
+      this.randomItem = randomItem.default; // .default is needed because ES Modules export assets as the default export.
+      this.oponentSelectedType = randomType;
 
-      if (randomItem.includes("icon-") && randomItem.includes(".svg")) {
-        this.oponentSelectedType = randomItem
-          .split("icon-")[1]
-          .split(".svg")[0];
-      } else {
-        console.error("randomItem format is incorrect");
-        return null;
-      }
-
-      return randomItem;
+      return this.randomItem;
     },
     getGameResult() {
       if (this.selectedType === this.oponentSelectedType) {
