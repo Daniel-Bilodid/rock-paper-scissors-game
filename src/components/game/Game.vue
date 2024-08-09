@@ -143,13 +143,10 @@ export default {
       }, 2000);
     },
     getOpponentPick() {
-      if (!this.opponentPick || this.opponentPick.length === 0) {
-        console.error("opponentPick is undefined or empty");
-        return null;
-      }
+      const opponentPick = [paper, scissors, rock];
 
       const randomItem =
-        this.opponentPick[Math.floor(Math.random() * this.opponentPick.length)];
+        opponentPick[Math.floor(Math.random() * opponentPick.length)];
 
       if (!randomItem) {
         console.error("Failed to get a random item from opponentPick");
