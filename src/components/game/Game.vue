@@ -142,26 +142,43 @@ export default {
         this.getGameResult();
       }, 2000);
     },
-    async getOpponentPick() {
-      const assets = {
-        paper: () => import("../../assets/icon-paper.svg"),
-        scissors: () => import("../../assets/icon-scissors.svg"),
-        rock: () => import("../../assets/icon-rock.svg"),
-      };
+    getOpponentPick() {
+      if (!this.opponentPick || this.opponentPick.length === 0) {
+        console.error("opponentPick is undefined or empty");
+        return null;
+      }
 
-      const types = Object.keys(assets);
-      const randomType = types[Math.floor(Math.random() * types.length)];
-      const randomItem = await assets[randomType]();
+      const randomItem =
+        this.opponentPick[Math.floor(Math.random() * this.opponentPick.length)];
 
       if (!randomItem) {
         console.error("Failed to get a random item from opponentPick");
         return null;
       }
 
-      this.randomItem = randomItem.default; // .default is needed because ES Modules export assets as the default export.
-      this.oponentSelectedType = randomType;
+      this.randomItem = randomItem;
 
-      return this.randomItem;
+      if (randomItem.startsWith("data:image/svg+xml,")) {
+        const svgData = decodeURIComponent(randomItem.split(",")[1]);
+
+        const match = svgData.match(/fill='([^']+)'/);
+        if (match && match[1]) {
+          this.oponentSelectedType = match[1];
+        } else {
+          console.error("Failed to extract type from data URL");
+          return null;
+        }
+      } else if (randomItem.includes("icon-") && randomItem.includes(".svg")) {
+        this.oponentSelectedType = randomItem
+          .split("icon-")[1]
+          .split(".svg")[0];
+      } else {
+        console.log(randomItem);
+        console.error("randomItem format is incorrect");
+        return null;
+      }
+
+      return randomItem;
     },
     getGameResult() {
       if (this.selectedType === this.oponentSelectedType) {
