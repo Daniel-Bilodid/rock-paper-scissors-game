@@ -143,42 +143,58 @@ export default {
       }, 2000);
     },
     getOpponentPick() {
-      if (!this.opponentPick || this.opponentPick.length === 0) {
+     // Проверяем, что массив opponentPick инициализирован и не пуст
+     if (!this.opponentPick || this.opponentPick.length === 0) {
         console.error("opponentPick is undefined or empty");
         return null;
-      }
+    }
 
-      const randomItem =
-        this.opponentPick[Math.floor(Math.random() * this.opponentPick.length)];
+    // Генерация случайного индекса
+    const randomIndex = Math.floor(Math.random() * this.opponentPick.length);
+    console.log("Selected Random Index: ", randomIndex);
 
-      if (!randomItem) {
-        console.error("Failed to get a random item from opponentPick");
-        return null;
-      }
+    // Выбираем случайный элемент из массива
+    const randomItem = this.opponentPick[randomIndex];
+    console.log("Selected Random Item: ", randomItem);
 
-      this.randomItem = randomItem;
-
-      if (randomItem.startsWith("data:image/svg+xml,")) {
+    // Если элемент в формате data URL (например, base64)
+    if (randomItem.startsWith("data:image/svg+xml,")) {
         const svgData = decodeURIComponent(randomItem.split(",")[1]);
 
-        const match = svgData.match(/fill='([^']+)'/);
-        if (match && match[1]) {
-          this.oponentSelectedType = match[1];
+        // Определяем тип по SVG данным, используя предопределенные соответствия
+        const typeFromSvg = this.getTypeFromSvg(svgData);
+        if (typeFromSvg) {
+            this.opponentSelectedType = typeFromSvg;
         } else {
-          console.error("Failed to extract type from data URL");
-          return null;
+            console.error("Failed to determine type from SVG data");
+            return null;
         }
-      } else if (randomItem.includes("icon-") && randomItem.includes(".svg")) {
-        this.oponentSelectedType = randomItem
-          .split("icon-")[1]
-          .split(".svg")[0];
-      } else {
-        console.log(randomItem);
-        console.error("randomItem format is incorrect");
+    } else {
+        // Если тип не может быть определен из SVG данных, можно добавить другие проверки
+        console.error("randomItem format is incorrect: ", randomItem);
         return null;
-      }
+    }
 
-      return randomItem;
+    console.log(`Opponent selected type: ${this.opponentSelectedType}`);
+    return this.opponentSelectedType;
+}
+
+getTypeFromSvg(svgData) {
+    // Пример предопределенного соответствия SVG к типу
+    const svgToTypeMap = {
+        "rockSvgPathData": "rock",
+        "paperSvgPathData": "paper",
+        "scissorsSvgPathData": "scissors",
+    };
+
+    // Можно использовать регулярные выражения для проверки содержания SVG данных
+    for (const [svgPathData, type] of Object.entries(svgToTypeMap)) {
+        if (svgData.includes(svgPathData)) {
+            return type;
+        }
+    }
+
+    return null;
     },
     getGameResult() {
       if (this.selectedType === this.oponentSelectedType) {
