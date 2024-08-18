@@ -98,9 +98,9 @@ export default {
   &__modal {
     position: absolute;
     right: 50%;
-    top: -8%;
+    top: -13rem;
     transform: translate(50%, 50%);
-    width: 400px;
+    width: 100%;
     height: 415px;
     border-radius: 8px;
     box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.2);

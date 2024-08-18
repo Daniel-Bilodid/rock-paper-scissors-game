@@ -72,7 +72,7 @@
             <button class="game__body-item game__item-large">
               <img
                 class="game__img-large"
-                :src="randomItem"
+                :src="getOpponentImage"
                 :alt="oponentSelectedType"
               />
             </button>
@@ -132,6 +132,18 @@ export default {
           return "";
       }
     },
+    getOpponentImage() {
+      switch (this.oponentSelectedType) {
+        case "paper":
+          return paper;
+        case "scissors":
+          return scissors;
+        case "rock":
+          return rock;
+        default:
+          return "";
+      }
+    },
   },
   methods: {
     handleClick(type) {
@@ -143,44 +155,19 @@ export default {
       }, 2000);
     },
     getOpponentPick() {
-      if (!this.opponentPick || this.opponentPick.length === 0) {
-        console.error("opponentPick is undefined or empty");
-        return null;
-      }
-
-      const randomItem =
-        this.opponentPick[Math.floor(Math.random() * this.opponentPick.length)];
-
-      if (!randomItem) {
-        console.error("Failed to get a random item from opponentPick");
-        return null;
-      }
-
-      this.randomItem = randomItem;
-
-      if (randomItem.startsWith("data:image/svg+xml,")) {
-        const svgData = decodeURIComponent(randomItem.split(",")[1]);
-
-        const match = svgData.match(/fill='([^']+)'/);
-        if (match && match[1]) {
-          this.oponentSelectedType = match[1];
-        } else {
-          console.error("Failed to extract type from data URL");
-          return null;
-        }
-      } else if (randomItem.includes("icon-") && randomItem.includes(".svg")) {
-        this.oponentSelectedType = randomItem
-          .split("icon-")[1]
-          .split(".svg")[0];
-      } else {
-        console.log(randomItem);
-        console.error("randomItem format is incorrect");
-        return null;
-      }
-
-      return randomItem;
+      const types = ["rock", "paper", "scissors"];
+      const randomIndex = Math.floor(Math.random() * types.length);
+      const randomType = types[randomIndex];
+      this.oponentSelectedType = randomType;
+      console.log(`Opponent selected: ${randomType}`);
+      return randomType;
     },
+
     getGameResult() {
+      console.log(
+        `Player: ${this.selectedType}, Opponent: ${this.oponentSelectedType}`
+      );
+
       if (this.selectedType === this.oponentSelectedType) {
         this.gameResultTitle = "DRAW";
       } else if (
@@ -192,7 +179,6 @@ export default {
       } else {
         this.computerWin = true;
         this.gameResultTitle = "YOU LOST";
-        this.computerWin = true;
       }
     },
     incrementWinCounter() {
