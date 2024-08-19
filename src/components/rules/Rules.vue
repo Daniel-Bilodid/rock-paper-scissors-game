@@ -20,6 +20,14 @@
         <div class="rules__modal-img">
           <img src="../../assets/image-rules.svg" alt="rules" />
         </div>
+
+        <button @click="toggleRules" class="adaptive">
+          <img
+            class="rules__close"
+            src="../../assets/icon-close.svg"
+            alt="iconClose"
+          />
+        </button>
       </div>
     </transition>
 
@@ -45,7 +53,9 @@ export default {
 
 <style lang="scss">
 @import "../../variables";
-
+.adaptive {
+  display: none;
+}
 .overlay {
   position: fixed;
   top: 0;
@@ -92,15 +102,16 @@ export default {
       background: none;
       padding: 0;
       cursor: pointer;
+      display: block;
     }
   }
 
   &__modal {
     position: absolute;
     right: 50%;
-    top: -13rem;
+    top: -5rem;
     transform: translate(50%, 50%);
-    width: 100%;
+    width: 400px;
     height: 415px;
     border-radius: 8px;
     box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.2);
@@ -148,9 +159,39 @@ export default {
 }
 
 @media screen and (max-width: 450px) {
-  .rulse {
+  .adaptive {
+    display: block;
+    border: none !important;
+    background: none !important;
+    padding: 0;
+    margin: 0 auto;
+  }
+  .rules {
     &__modal {
-      width: 100% !important;
+      top: -24rem;
+      position: absolute;
+
+      width: 100vw;
+      height: 120vh;
+      z-index: 999;
+      background-color: white;
+
+      &-title {
+        margin: 0 auto;
+
+        margin-top: 95px;
+
+        margin-bottom: 53px;
+      }
+    }
+    &__close {
+      margin: 0;
+      margin-top: 104px;
+    }
+    &__button {
+      &-close {
+        display: none;
+      }
     }
   }
 }
